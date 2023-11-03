@@ -15,7 +15,7 @@ logs = []
 # Initialize a dictionary to keep track of user subscriptions by month
 user_subscriptions = {}
 
-# Define subscription probabilities
+# Define subscription probabilities for 1st month
 subscription_probabilities = [0.3, 0.3, 0.4]
 
 # Initialize a dictionary to keep track of the last subscription date for each user
@@ -137,10 +137,18 @@ while current_date <= end_date:
                 if user_id in last_subscription_dates:
                     last_subscription_date = last_subscription_dates[user_id]
 
-                    # Randomly select a subscription type based on the specified probabilities
-                    subscription_type = random.choices(subscription_types, subscription_probabilities)[0]
-                    log["SubscriptionType"] = subscription_type
-                    log["Description"] = f"User subscribed to the {subscription_type} plan"
+                    # Check if it has been more than one month since the last subscription
+                    if (current_date.year - last_subscription_date.year) > 0 or (current_date.month - last_subscription_date.month) >= 1:
+                        # Randomly select a subscription type based on the specified probabilities
+                        subscription_type = random.choices(subscription_types, subscription_probabilities)[0]
+                        log["SubscriptionType"] = subscription_type
+                        log["Description"] = f"User subscribed to the {subscription_type} plan"
+                    else:
+                        # User has already subscribed this month, so set the description to "User already subscribed"
+                        subscription_type = ""
+                        log["SubscriptionType"] = subscription_type
+                        log["Description"] = "User already subscribed"
+
                 else:
                     # User has not subscribed before, so set the description to "User subscribed to the Basic plan"
                     subscription_type = "Basic"
@@ -150,7 +158,9 @@ while current_date <= end_date:
                 # Update the last subscription date for the user
                 last_subscription_dates[user_id] = current_date
 
+            # if event == "Subscription" and subscription_type:
             logs.append(log)
+
     current_date += delta
 
 # Save the generated logs to a JSON file

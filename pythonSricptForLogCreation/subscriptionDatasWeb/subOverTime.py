@@ -7,7 +7,7 @@ import base64
 app = Flask(__name__)
 
 # Replace with the path to your CSV file
-csv_file = './subscription_data.csv'
+csv_file = 'D:/cources/workspace/aws_microservice_workspace/pythonSricptForLogCreation/subscriptionDatasWeb/subscription_data.csv'
 
 @app.route('/')
 def show_subscription_trends():
